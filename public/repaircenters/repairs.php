@@ -7,7 +7,7 @@
     <meta property="og:title" content="FleetControl">
     <meta property="og:type" content="website">
     <meta name="author" content="Paul M. Summitt">
-    <title>FleetControl Options</title>
+    <title>FleetControl Repair Options</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="/public/css/styles.css">
     <script async src="/public/js/index.js"></script>
@@ -19,7 +19,7 @@
 
     <nav class="navbar navbar-expand-lg bg-dark navbar-expand-sm ">
         <div class="container-fluid">
-            <a class="navbar-brand link-light" href="/public/index.php">
+            <a class="navbar-brand link-light" href="index.php">
                 <h1><strong>FleetControl</strong></h1>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,12 +51,12 @@
             <div class="col">
                 <div class="card text-bg-dark p-3">
                     <div class="card-body">
-                        <h5 class="card=title">FleetControl Options</h5>
+                        <h5 class="card=title">FleetControl Repair Options</h5>
                         <ul>
-                            <li><a href="vehicles/vehicle.php"><button type="button" class="btn btn-primary">Vehicles</button></a></li>
-                            <li><a href="services.php"><button type="button" class="btn btn-primary">Services</button></a></li>
-                            <li><a href="repairs.php"><button type="button" class="btn btn-primary">Repairs</button></a></li>
-                            <li><a href="servicecenters.php"><button type="button" class="btn btn-primary">ServiceCenters</button></a></li>
+                            <li><a href="addrepair.php"><button type="button" class="btn btn-success">Add Repair</button></a></li>
+                            <li><a href="selectservicecenter.php"><button type="button" class="btn btn-success">Select Service Center</button></a></li>
+                            <li><a href="selectservicetype.php"><button type="button" class="btn btn-success">Select Repair Type</button></a></li>
+                            <li><a href="deleterepair.php"><button type="button" class="btn btn-danger">Delete Repair</button></a></li>
                         </ul>
                     </div>
                 </div>

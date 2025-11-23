@@ -25,16 +25,10 @@ if(!isset($page_title)) { $page_title = 'Fleet Control'; }
             <div class="collapse navbar-collapse link-light" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link link-light active" aria-current="page" href="#">LOG IN</a>
+                        <a class="nav-link link-light active" aria-current="page" href="http://192.168.0.108/FleetControl/index.php">LOG IN</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link link-light" href="#">VIEW</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link link-light" href="#">ADD</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link link-light" href="#"></a>
+                        <a class="nav-link link-light" href="http://192.168.0.108/FleetControl/index.php">HOME</a>
                     </li>
                 </ul>
             </div>

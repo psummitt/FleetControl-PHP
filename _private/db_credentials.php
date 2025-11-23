@@ -1,8 +1,6 @@
 <?php
 
-const DB_SERVER = "localhost";
-const DB_USER = "webuser";
-const DB_PASS = "secretpassword";
-const DB_NAME = "fleetcontrol";
-
-?>
+define("DB_SERVER", 'localhost');
+define("DB_USER", 'paulmsummitt');
+define("DB_PASS", 'N3ws8@10!');
+define("DB_NAME", 'FleetControl');

@@ -7,7 +7,7 @@
     <meta property="og:title" content="FleetControl">
     <meta property="og:type" content="website">
     <meta name="author" content="Paul M. Summitt">
-    <title>FleetControl Options</title>
+    <title>FleetControl Vehicle Options</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="/public/css/styles.css">
     <script async src="/public/js/index.js"></script>
@@ -19,7 +19,7 @@
 
     <nav class="navbar navbar-expand-lg bg-dark navbar-expand-sm ">
         <div class="container-fluid">
-            <a class="navbar-brand link-light" href="/public/index.php">
+            <a class="navbar-brand link-light" href="../index.php">
                 <h1><strong>FleetControl</strong></h1>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,7 +28,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li>
-                        <a class="nav-item nav-link active link-light" aria-current="page" href="index.php">HOME</a>
+                        <a class="nav-item nav-link active link-light" aria-current="page" href="vehicle.php">HOME</a>
                     </li>
                     <li>
                         <a class="nav-item nav-link link-light" href="about.html"></a>
@@ -45,18 +45,19 @@
         <div class="row">
             <div class="col">
                 <div class="card text-bg-dark p-3">
-                    <img src="img/Truck_368x368.jpg" class="img-thumbnail" alt="image of a truck" width="300px" height="300px">
+                    <img src="../img/Truck_368x368.jpg" class="img-thumbnail" alt="image of a truck" width="300px" height="300px">
                 </div>
             </div>
             <div class="col">
                 <div class="card text-bg-dark p-3">
                     <div class="card-body">
-                        <h5 class="card=title">FleetControl Options</h5>
+                        <h5 class="card=title">FleetControl Vehicle Options</h5>
                         <ul>
-                            <li><a href="vehicles/vehicle.php"><button type="button" class="btn btn-primary">Vehicles</button></a></li>
-                            <li><a href="services.php"><button type="button" class="btn btn-primary">Services</button></a></li>
-                            <li><a href="repairs.php"><button type="button" class="btn btn-primary">Repairs</button></a></li>
-                            <li><a href="servicecenters.php"><button type="button" class="btn btn-primary">ServiceCenters</button></a></li>
+                            <li><a href=".addvehicle.php"><button type="button" class="btn btn-success">Add Vehicle</button></a></li>
+                            <li><a href=".showvehicle.php"><button type="button" class="btn btn-success">Show Vehicle</button></a></li>
+                            <li><a href=".editvehicle.php"><button type="button" class="btn btn-success">Edit Vehicle</button></a></li>
+                            <li><a href=".addschedule.php"><button type="button" class="btn btn-success">Add Vehicle Maintenance Schedule</button></a></li>
+                            <li><a href=".deletevehicle.php"><button type="button" class="btn btn-danger">Delete Vehicle</button></a></li>
                         </ul>
                     </div>
                 </div>
