@@ -54,9 +54,9 @@
                         <h5 class="card=title">FleetControl Options</h5>
                         <ul>
                             <li><a href="vehicles/vehicle.php"><button type="button" class="btn btn-primary">Vehicles</button></a></li>
-                            <li><a href="services.php"><button type="button" class="btn btn-primary">Services</button></a></li>
-                            <li><a href="repairs.php"><button type="button" class="btn btn-primary">Repairs</button></a></li>
-                            <li><a href="servicecenters.php"><button type="button" class="btn btn-primary">ServiceCenters</button></a></li>
+                            <li><a href="repaircenters/services.php"><button type="button" class="btn btn-primary">Services</button></a></li>
+                            <li><a href="repaircenters/repairs.php"><button type="button" class="btn btn-primary">Repairs</button></a></li>
+                            <li><a href="repaircenters/servicecenters.php"><button type="button" class="btn btn-primary">ServiceCenters</button></a></li>
                         </ul>
                     </div>
                 </div>

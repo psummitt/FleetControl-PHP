@@ -25,8 +25,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("ss", $txtUserName, $txtUserPassword);
 
         if ($stmt->execute()) {
-            $message = "Account created successfully";
-            $toastClass = "#28a745"; // Success color
+            // Redirect to index.php on successful account creation
+            header("Location: index.php");
+            exit();
         } else {
             $message = "Error: " . $stmt->error;
             $toastClass = "#dc3545"; // Danger color
@@ -83,55 +84,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </nav>
 
 <body class="bg-light">
-    <div class="container p-5 d-flex flex-column align-items-center">
-        <?php if ($message): ?>
-            <div class="toast align-items-center text-white border-0" 
-          role="alert" aria-live="assertive" aria-atomic="true"
-                style="background-color: <?php echo $toastClass; ?>;">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        <?php echo $message; ?>
+    <article>
+        <div class="container p-5 d-flex flex-column align-items-center">
+            <div class="row">
+                <div class="col">
+                    <div class="card text-bg-dark p-3">
+                        <img src="public/img/Truck_368x368.jpg" class="img-thumbnail" alt="image of a truck">
                     </div>
-                    <button type="button" class="btn-close
-                    btn-close-white me-2 m-auto" 
-                          data-bs-dismiss="toast"
-                        aria-label="Close"></button>
+                </div>
+                    <?php if ($message): ?>
+                        <div class="toast align-items-center text-white border-0" 
+                    role="alert" aria-live="assertive" aria-atomic="true"
+                            style="background-color: <?php echo $toastClass; ?>;">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    <?php echo $message; ?>
+                                </div>
+                                <button type="button" class="btn-close
+                                btn-close-white me-2 m-auto" 
+                                    data-bs-dismiss="toast"
+                                    aria-label="Close"></button>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="post" class="form-control mt-1 p-4"
+                                style="height:auto; width:380px;
+                                box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+                                rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;">
+                                <div class="row text-center">
+                                    <i class="fa fa-user-circle-o fa-3x mt-1 mb-2" style="color: green;"></i>
+                                    <h5 class="p-4" style="font-weight: 700;">Create Your Account</h5>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="username"><i 
+                                    class="fa fa-user"></i> User Name</label>
+                                    <input type="text" name="username" id="username"
+                                    class="form-control" required>
+                                </div>
+                                <div class="mb-2 mt-2">
+                                    <label for="password"><i 
+                                    class="fa fa-lock"></i> Password</label>
+                                    <input type="text" name="password" id="password"
+                                    class="form-control" required>
+                                </div>
+                                <div class="mb-2 mt-3">
+                                    <button type="submit" 
+                                    class="btn btn-success
+                                    bg-success" style="font-weight: 600;">Create
+                                        Account</button>
+                                </div>
+                                <div class="mb-2 mt-4">
+                                    <p class="text-center" style="font-weight: 600; 
+                                    color: navy;">I have an Account <a href="./index.php"
+                                            style="text-decoration: none;">Login</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
-        <?php endif; ?>
-        <form method="post" class="form-control mt-5 p-4"
-            style="height:auto; width:380px;
-            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-            rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;">
-            <div class="row text-center">
-                <i class="fa fa-user-circle-o fa-3x mt-1 mb-2" style="color: green;"></i>
-                <h5 class="p-4" style="font-weight: 700;">Create Your Account</h5>
-            </div>
-            <div class="mb-2">
-                <label for="username"><i 
-                  class="fa fa-user"></i> User Name</label>
-                <input type="text" name="username" id="username"
-                  class="form-control" required>
-            </div>
-            <div class="mb-2 mt-2">
-                <label for="password"><i 
-                  class="fa fa-lock"></i> Password</label>
-                <input type="text" name="password" id="password"
-                  class="form-control" required>
-            </div>
-            <div class="mb-2 mt-3">
-                <button type="submit" 
-                  class="btn btn-success
-                bg-success" style="font-weight: 600;">Create
-                    Account</button>
-            </div>
-            <div class="mb-2 mt-4">
-                <p class="text-center" style="font-weight: 600; 
-                color: navy;">I have an Account <a href="./login.php"
-                        style="text-decoration: none;">Login</a></p>
-            </div>
-        </form>
-    </div>
+        </div>
+    </article>
     <script>
         let toastElList = [].slice.call(document.querySelectorAll('.toast'))
         let toastList = toastElList.map(function (toastEl) {

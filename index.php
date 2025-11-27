@@ -11,6 +11,43 @@ if (isset($_SESSION['account_loggedin'])) {
 $txtUsername = $txtUserPassword = $confirm_txtUserPassword ="";
 $txtUsername_err = $txtUserPassword_err = $confirm_txtUserPassword_err = "";
 
+// Process login form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['action'])) {
+    // Get username and password from login form
+    $login_username = $_POST['txtUserName'] ?? '';
+    $login_password = $_POST['password'] ?? '';
+    
+    if (empty($login_username) || empty($login_password)) {
+        $login_err = "Please enter both username and password.";
+    } else {
+        // Check credentials against database
+        $stmt = $db->prepare("SELECT idSignIn, txtUserPassword FROM tblsignin WHERE txtUserName = ?");
+        $stmt->bind_param("s", $login_username);
+        $stmt->execute();
+        $stmt->store_result();
+        
+        if ($stmt->num_rows == 1) {
+            $stmt->bind_result($id, $stored_password);
+            $stmt->fetch();
+            
+            // Verify password (assuming it's hashed)
+            if ($login_password === $stored_password || password_verify($login_password, $stored_password)) {
+                $_SESSION['account_loggedin'] = true;
+                $_SESSION['user_id'] = $id;
+                $_SESSION['username'] = $login_username;
+                // Redirect to public/index.php on successful login
+                header('Location: public/index.php');
+                exit;
+            } else {
+                $login_err = "Invalid username or password.";
+            }
+        } else {
+            $login_err = "Invalid username or password.";
+        }
+        $stmt->close();
+    }
+}
+
 // Processing form data when form is submitted
 // Only process registration when the posted action is 'register'
 if ($_SERVER["REQUEST_METHOD"] == "POST" && (($_POST['action'] ?? '') === 'register')) {
@@ -155,6 +192,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && (($_POST['action'] ?? '') === 'regis
                 <div class="card">
                     <div class="card-body">
                         <p>Please log in to view or add information about your vehicles.</p>
+                        <?php if (isset($login_err)): ?>
+                            <div class="alert alert-danger" role="alert">
+                                <?php echo $login_err; ?>
+                            </div>
+                        <?php endif; ?>
                     <form action="index.php" method="post" class="form login-form">
                         <label class="form-label" for="txtUserName">Username</label>
                         <div class="form-group">
