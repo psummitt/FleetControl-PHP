@@ -612,7 +612,17 @@
     }
   }
 
-  // Vehicles
+  function find_vehicle_by_id($id) {
+    global $db;
+
+    $sql = "SELECT * FROM tblvehicle ";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
+    $result = mysqli_query($db, $sql);
+    confirm_result_set($result);
+    $vehicle = mysqli_fetch_assoc($result);
+    mysqli_free_result($result);
+    return $vehicle; // returns an assoc. array
+  }
 
   function validate_vehicle($vehicle) {
     $errors = [];
@@ -688,7 +698,7 @@
     $purchase_price = is_blank($vehicle['curPurchasePrice']) ? null : (float)$vehicle['curPurchasePrice'];
     $notes = is_blank($vehicle['txtNotes']) ? null : db_escape($db, $vehicle['txtNotes']);
 
-    $sql = "INSERT INTO vehicles ";
+    $sql = "INSERT INTO tblvehicle ";
     $sql .= "(vehicle_year, vehicle_make, vehicle_model, vehicle_identifier, license_state, license_number, color, odometer, key_ignition, key_door, purchase_date, purchase_price, notes) ";
     $sql .= "VALUES (";
     $sql .= "'" . $vehicle_year . "',";

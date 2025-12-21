@@ -38,26 +38,28 @@
         </div>
     </nav>
 
-<article>
+<main>
 
     <div class="container-fluidtext-bg-dark p-3">
         <h1 class="slidetext display-1 text-bg-dark p-3">Welcome to FleetControl</h1>
         <div class="row">
-            <div class="col">
-                <div class="card text-bg-dark p-3">
-                    <img src="../img/Truck_368x368.jpg" class="img-thumbnail" alt="image of a truck" width="300px" height="300px">
+                <div class="col">
+                    <div class="card text-bg-dark p-3">
+                        <center>
+                            <img src="../img/Truck_368x368.jpg" class="img-thumbnail" alt="image of a semi-truck" width="300px" height="300px">
+                        </center>
+                    </div>
                 </div>
-            </div>
             <div class="col">
                 <div class="card text-bg-dark p-3">
                     <div class="card-body">
                         <h5 class="card=title">FleetControl Vehicle Options</h5>
                         <ul>
-                            <li><a href="addVehicle.php"><button type="button" class="btn btn-success">Add Vehicle</button></a></li>
-                            <li><a href="showVehicle.php"><button type="button" class="btn btn-success">Show Vehicle</button></a></li>
-                            <li><a href="editVehicle.php"><button type="button" class="btn btn-success">Edit Vehicle</button></a></li>
-                            <li><a href="addSchedule.php"><button type="button" class="btn btn-success">Add Vehicle Maintenance Schedule</button></a></li>
-                            <li><a href="deleteVehicle.php"><button type="button" class="btn btn-danger">Delete Vehicle</button></a></li>
+                            <li><a href="addVehicle.php" data-toggle="tooltip" title="Add Vehicle page: Add vehicles."><button type="button" class="btn btn-success">Add Vehicle</button></a></li>
+                            <li><a href="showVehicle.php" data-toggle="tooltip" title="Show Vehicle page: Show vehicle."><button type="button" class="btn btn-success">Show Vehicle</button></a></li>
+                            <li><a href="editVehicle.php" data-toggle="tooltip" title="Edit Vehicle page: Edit vehicle."><button type="button" class="btn btn-success">Edit Vehicle</button></a></li>
+                            <li><a href="addSchedule.php" data-toggle="tooltip" title="Add Vehicle Maintenance Shedule page: Add vehicle mainteance schedules."><button type="button" class="btn btn-success">Add Vehicle Maintenance Schedule</button></a></li>
+                            <li><a href="deleteVehicle.php data-toggle="tooltip" title="Delete Vehicle page: Delete all vehicle records."><button type="button" class="btn btn-danger">Delete Vehicle</button></a></li>
                         </ul>
                     </div>
                 </div>
@@ -65,19 +67,23 @@
         </div>
     </div>
 
-</article>
-<footer class="bg-dark link-light mar-left-5" >
-    <div>
-        <!-- Social media and contact links. Add or remove any networks. -->
-        <ul>
-            <li><a href="mailto:paulmsummitt@gmail.com"><img src="https://res.cloudinary.com/dhfzm8v7y/image/upload/v1656777427/images/opened-email-envelope_icon-icons.com_70656_gx2u5j.png" style="color: white" title="e-mail" width="20px" height="20px">paulmsummitt@gmail.com</a></li>
-            <li><a href="https://www.linkedin.com/in/paul-m-summitt/" target="_blank" rel="noopener">
-                    <img src="https://res.cloudinary.com/dhfzm8v7y/image/upload/v1656777431/images/LinkedIn_Rounded_icon-icons.com_61573_fhhjjs.png" style="color: white" title="LinkedIn"  width="20px" height="20px">LinkedIn</a></li>
-        </ul>
-    </div>
-    <p id="textbottom">&copy; <?php echo date('Y'); ?> Paul M. Summitt</p>
-    </div>
-</footer>
+</main>
+
+
+    <footer class="bg-dark link-light" >
+        <div class="container">
+            <div>
+            <!-- Social media and contact links. Add or remove any networks. -->
+                <ul class="list-group list-group-flush">
+                    <li class="list-group list-group-flush"><a href="mailto:paulmsummitt@gmail.com"><img src="img/509-5096820_mail-png-circle-svg-icon-free-download-email-1369349225.png style="color: white" title="email"  width="20px" height="20px"> paulmsummitt@gmail.com</a></li>
+                    <li class="list-group list-group-flush"><a href="https://www.linkedin.com/in/paul-m-summitt/" target="_blank" rel="noopener">
+                            <img src="img/OIP-2203254293.jpg" style="color: white" title="LinkedIn"  width="20px" height="20px"> LinkedIn</a></li>
+                </ul>
+            </div>
+            <p id="textbottom">&copy; <?php echo date('Y'); ?> Paul M. Summitt</p>
+        </div>
+    </footer>
+
 </body>
-</html>S
+</html>
 
