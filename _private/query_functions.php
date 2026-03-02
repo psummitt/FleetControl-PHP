@@ -2,6 +2,36 @@
 
   // Subjects
 
+  // Helper: determine primary/key column name for a table
+  function table_primary_key($table) {
+    global $db;
+
+    $cols = [];
+    $res = mysqli_query($db, "SHOW COLUMNS FROM " . db_escape($db, $table));
+    if ($res) {
+      while ($col = mysqli_fetch_assoc($res)) {
+        $cols[] = $col['Field'];
+      }
+      mysqli_free_result($res);
+    }
+
+    $preferred = [
+      'id',
+      $table . '_id',
+      $table . 'ID',
+      $table . 'Id',
+      'ID'
+    ];
+
+    foreach ($preferred as $p) {
+      if (in_array($p, $cols, true)) {
+        return $p;
+      }
+    }
+
+    return $cols[0] ?? 'id';
+  }
+
   function find_all_subjects($options=[]) {
     global $db;
 
@@ -23,8 +53,10 @@
 
     $visible = $options['visible'] ?? false;
 
+    $key = table_primary_key('subjects');
+
     $sql = "SELECT * FROM subjects ";
-    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
+    $sql .= "WHERE `" . $key . "`='" . db_escape($db, $id) . "' ";
     if($visible) {
       $sql .= "AND visible = true";
     }
@@ -107,11 +139,13 @@
     $old_position = $old_subject['position'];
     shift_subject_positions($old_position, $subject['position'], $subject['id']);
 
+    $key = table_primary_key('subjects');
+
     $sql = "UPDATE subjects SET ";
     $sql .= "menu_name='" . db_escape($db, $subject['menu_name']) . "', ";
     $sql .= "position='" . db_escape($db, $subject['position']) . "', ";
     $sql .= "visible='" . db_escape($db, $subject['visible']) . "' ";
-    $sql .= "WHERE id='" . db_escape($db, $subject['id']) . "' ";
+    $sql .= "WHERE `" . $key . "`='" . db_escape($db, $subject['id']) . "' ";
     $sql .= "LIMIT 1";
 
     $result = mysqli_query($db, $sql);
@@ -134,8 +168,10 @@
     $old_position = $old_subject['position'];
     shift_subject_positions($old_position, 0, $id);
 
+    $key = table_primary_key('subjects');
+
     $sql = "DELETE FROM subjects ";
-    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
+    $sql .= "WHERE `" . $key . "`='" . db_escape($db, $id) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
 
@@ -152,6 +188,8 @@
 
   function shift_subject_positions($start_pos, $end_pos, $current_id=0) {
     global $db;
+
+    $key = table_primary_key('subjects');
 
     if($start_pos == $end_pos) { return; }
 
@@ -176,7 +214,7 @@
       $sql .= "AND position < '" . db_escape($db, $start_pos) . "' ";
     }
     // Exclude the current_id in the SQL WHERE clause
-    $sql .= "AND id != '" . db_escape($db, $current_id) . "' ";
+    $sql .= "AND `" . $key . "` != '" . db_escape($db, $current_id) . "' ";
 
     $result = mysqli_query($db, $sql);
     // For UPDATE statements, $result is true/false
@@ -208,8 +246,10 @@
 
     $visible = $options['visible'] ?? false;
 
+    $key = table_primary_key('pages');
+
     $sql = "SELECT * FROM pages ";
-    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
+    $sql .= "WHERE `" . $key . "`='" . db_escape($db, $id) . "' ";
     if($visible) {
       $sql .= "AND visible = true";
     }
@@ -308,13 +348,15 @@
     $old_position = $old_page['position'];
     shift_page_positions($old_position, $page['position'], $page['subject_id'], $page['id']);
 
+    $key = table_primary_key('pages');
+
     $sql = "UPDATE pages SET ";
     $sql .= "subject_id='" . db_escape($db, $page['subject_id']) . "', ";
     $sql .= "menu_name='" . db_escape($db, $page['menu_name']) . "', ";
     $sql .= "position='" . db_escape($db, $page['position']) . "', ";
     $sql .= "visible='" . db_escape($db, $page['visible']) . "', ";
     $sql .= "content='" . db_escape($db, $page['content']) . "' ";
-    $sql .= "WHERE id='" . db_escape($db, $page['id']) . "' ";
+    $sql .= "WHERE `" . $key . "`='" . db_escape($db, $page['id']) . "' ";
     $sql .= "LIMIT 1";
 
     $result = mysqli_query($db, $sql);
@@ -337,8 +379,10 @@
     $old_position = $old_page['position'];
     shift_page_positions($old_position, 0, $old_page['subject_id'], $id);
 
+    $key = table_primary_key('pages');
+
     $sql = "DELETE FROM pages ";
-    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
+    $sql .= "WHERE `" . $key . "`='" . db_escape($db, $id) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
 
@@ -391,6 +435,8 @@
   function shift_page_positions($start_pos, $end_pos, $subject_id, $current_id=0) {
     global $db;
 
+    $key = table_primary_key('pages');
+
     if($start_pos == $end_pos) { return; }
 
     $sql = "UPDATE pages ";
@@ -414,7 +460,7 @@
       $sql .= "AND position < '" . db_escape($db, $start_pos) . "' ";
     }
     // Exclude the current_id in the SQL WHERE clause
-    $sql .= "AND id != '" . db_escape($db, $current_id) . "' ";
+    $sql .= "AND `" . $key . "` != '" . db_escape($db, $current_id) . "' ";
     $sql .= "AND subject_id = '" . db_escape($db, $subject_id) . "'";
 
     $result = mysqli_query($db, $sql);
@@ -446,8 +492,10 @@
   function find_admin_by_id($id) {
     global $db;
 
+    $key = table_primary_key('admins');
+
     $sql = "SELECT * FROM admins ";
-    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
+    $sql .= "WHERE `" . $key . "`='" . db_escape($db, $id) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     confirm_result_set($result);
@@ -570,6 +618,8 @@
 
     $hashed_password = password_hash($admin['password'], PASSWORD_BCRYPT);
 
+    $key = table_primary_key('admins');
+
     $sql = "UPDATE admins SET ";
     $sql .= "first_name='" . db_escape($db, $admin['first_name']) . "', ";
     $sql .= "last_name='" . db_escape($db, $admin['last_name']) . "', ";
@@ -578,7 +628,7 @@
       $sql .= "hashed_password='" . db_escape($db, $hashed_password) . "', ";
     }
     $sql .= "username='" . db_escape($db, $admin['username']) . "' ";
-    $sql .= "WHERE id='" . db_escape($db, $admin['id']) . "' ";
+    $sql .= "WHERE `" . $key . "`='" . db_escape($db, $admin['id']) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
 
@@ -596,8 +646,10 @@
   function delete_admin($admin) {
     global $db;
 
+    $key = table_primary_key('admins');
+
     $sql = "DELETE FROM admins ";
-    $sql .= "WHERE id='" . db_escape($db, $admin['id']) . "' ";
+    $sql .= "WHERE `" . $key . "`='" . db_escape($db, $admin['id']) . "' ";
     $sql .= "LIMIT 1;";
     $result = mysqli_query($db, $sql);
 
@@ -615,13 +667,59 @@
   function find_vehicle_by_id($id) {
     global $db;
 
-    $sql = "SELECT * FROM tblvehicle ";
-    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
+    // Determine the correct primary/key column for tblvehicle dynamically
+    $columns = [];
+    $col_res = mysqli_query($db, "SHOW COLUMNS FROM tblvehicle");
+    if ($col_res) {
+      while ($col = mysqli_fetch_assoc($col_res)) {
+        $columns[] = $col['Field'];
+      }
+      mysqli_free_result($col_res);
+    }
+
+    // Preferred column names to try (in order)
+    $preferred = ['id', 'vehicle_id', 'vehicleID', 'vehicleId', 'ID'];
+    $key = null;
+    foreach ($preferred as $p) {
+      if (in_array($p, $columns, true)) {
+        $key = $p;
+        break;
+      }
+    }
+
+    // Fallback to first column if none of the preferred names exist
+    if (is_null($key)) {
+      if (!empty($columns)) {
+        $key = $columns[0];
+      } else {
+        // As a last resort, query without a WHERE (shouldn't normally happen)
+        $sql = "SELECT * FROM tblvehicle LIMIT 1";
+        $result = mysqli_query($db, $sql);
+        confirm_result_set($result);
+        $vehicle = mysqli_fetch_assoc($result);
+        mysqli_free_result($result);
+        return $vehicle;
+      }
+    }
+
+    $escaped_id = db_escape($db, $id);
+    $sql = "SELECT * FROM tblvehicle WHERE `" . $key . "`='" . $escaped_id . "' LIMIT 1";
     $result = mysqli_query($db, $sql);
     confirm_result_set($result);
     $vehicle = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
     return $vehicle; // returns an assoc. array
+  }
+
+  // Return all vehicles result set
+  function find_all_vehicles() {
+    global $db;
+
+    $key = table_primary_key('tblvehicle');
+    $sql = "SELECT * FROM tblvehicle ORDER BY `" . $key . "` ASC";
+    $result = mysqli_query($db, $sql);
+    confirm_result_set($result);
+    return $result;
   }
 
   function validate_vehicle($vehicle) {
