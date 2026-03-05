@@ -61,6 +61,7 @@
                             <img src="public/img/Truck_368x368.jpg" class="img-thumbnail" alt="image of a semi-truck"
                                 width="300px" height="300px">
                         </center>
+                    </div>
                 </div>
                 <div class="col">
                     <div class="card">
@@ -90,8 +91,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row mt-4">
                 <div class="col">
                     <div class="card">
                         <div class="card-body">
