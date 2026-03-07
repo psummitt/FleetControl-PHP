@@ -18,6 +18,21 @@
     <script async src="public/js/index.js"></script>
     <script async src="public/js/reloading.js"></script>
     <script async src="public/js/wheelcontroll.js"></script>
+    
+    <script>
+        function handleAcceptance() {
+            const checkbox = document.getElementById('acceptCheckbox');
+            if (checkbox.checked) {
+                window.location.href = 'public/index.php';
+            } else {
+                alert('Please accept the terms and conditions to continue.');
+            }
+        }
+
+        function goBackToIndex() {
+            window.location.href = 'index.php';
+        }
+    </script>
 </head>
 
 <body>
@@ -61,6 +76,7 @@
                             <img src="public/img/Truck_368x368.jpg" class="img-thumbnail" alt="image of a semi-truck"
                                 width="300px" height="300px">
                         </center>
+                    </div>
                 </div>
                 <div class="col">
                     <div class="card">
@@ -90,8 +106,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row mt-4">
                 <div class="col">
                     <div class="card">
                         <div class="card-body">
@@ -111,8 +125,28 @@
                     </div>
                 </div>
             </div>
+            <div class="row mt-4">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <form id="acceptForm" method="POST">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="acceptCheckbox" name="accept" value="yes">
+                                    <label class="form-check-label" for="acceptCheckbox">
+                                        Show that you accept these conditions by checking the box.
+                                    </label>
+                                </div>
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-primary" onclick="handleAcceptance()">Submit</button>
+                                    <button type="button" class="btn btn-secondary" onclick="goBackToIndex()">Decline</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
+ 
     </main>
 
     <footer class="bg-dark link-light">
