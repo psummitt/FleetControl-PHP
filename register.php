@@ -9,9 +9,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Match form field names and avoid undefined index notices
     $txtUserName = $_POST['username'] ?? '';
     $txtUserPassword = $_POST['password'] ?? '';
+    $txtCompanyName = $_POST['companyname'] ?? '';
+    $txtCompanyAddress1 = $_POST['address1'] ?? '';
+    $txtCompanyAddress2 = $_POST['address2'] ?? '';
+    $txtCity = $_POST['city'] ?? '';
+    $txtZipCode = $_POST['zipcode'] ?? '';
 
     // Check if email already exists (use $db from initialize.php)
-    $checkEmailStmt = $db->prepare("SELECT txtUserName FROM tblsignin WHERE txtUserName = ?");
+    $checkEmailStmt = $db->prepare("SELECT txtUserName FROM tblUsers WHERE txtUserName = ?");
     $checkEmailStmt->bind_param("s", $txtUserName);
     $checkEmailStmt->execute();
     $checkEmailStmt->store_result();
@@ -20,20 +25,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = "UserName already exists";
         $toastClass = "#007bff"; // Primary color
     } else {
-        // Prepare and bind
-        $stmt = $db->prepare("INSERT INTO tblsignin (txtUserName, txtUserPassword) VALUES (?, ?)");
-        $stmt->bind_param("ss", $txtUserName, $txtUserPassword);
+        // Insert into tblClientCompany first
+        $companyStmt = $db->prepare("INSERT INTO tblClientCompany (txtCompanyName, txtCompanyAddress1, txtCompanyAddress2, txtCity, txtZipCode) VALUES (?, ?, ?, ?, ?)");
+        $companyStmt->bind_param("sssss", $txtCompanyName, $txtCompanyAddress1, $txtCompanyAddress2, $txtCity, $txtZipCode);
+        
+        if ($companyStmt->execute()) {
+            $clientCompanyId = $db->insert_id;
+            
+            // Prepare and bind for tblUsers
+            $stmt = $db->prepare("INSERT INTO tblUsers (txtUserName, txtUserPassword, intClientCompany) VALUES (?, ?, ?)");
+            $stmt->bind_param("ssi", $txtUserName, $txtUserPassword, $clientCompanyId);
 
-        if ($stmt->execute()) {
-            // Redirect to index.php on successful account creation
-            header("Location: index.php");
-            exit();
+            if ($stmt->execute()) {
+                // Redirect to index.php on successful account creation
+                header("Location: index.php");
+                exit();
+            } else {
+                $message = "Error: " . $stmt->error;
+                $toastClass = "#dc3545"; // Danger color
+            }
+
+            $stmt->close();
         } else {
-            $message = "Error: " . $stmt->error;
+            $message = "Error inserting company: " . $companyStmt->error;
             $toastClass = "#dc3545"; // Danger color
         }
 
-        $stmt->close();
+        $companyStmt->close();
     }
 
     $checkEmailStmt->close();
@@ -114,6 +132,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 style="height:auto; width:380px;
                                 box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
                                 rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;">
+                                <div class="mb-2 mt-4">
+                                    <p class="text-center" style="font-weight: 600; 
+                                    color: navy;">I have an Account <a href="./index.php"
+                                            style="text-decoration: none;">Login</a></p>
+                                </div>
                                 <div class="row text-center">
                                     <i class="fa fa-user-circle-o fa-3x mt-1 mb-2" style="color: green;"></i>
                                     <h5 class="p-4" style="font-weight: 700;">Create Your Account</h5>
@@ -130,17 +153,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <input type="text" name="password" id="password"
                                     class="form-control" required>
                                 </div>
+                                <div class="mb-2 mt-2">
+                                    <label for="companyname"><i 
+                                    class="fa fa-building"></i> Company Name</label>
+                                    <input type="text" name="companyname" id="companyname"
+                                    class="form-control" required>
+                                </div>
+                                <div class="mb-2 mt-2">
+                                    <label for="address1"><i 
+                                    class="fa fa-map-marker"></i> Address 1</label>
+                                    <input type="text" name="address1" id="address1"
+                                    class="form-control" required>
+                                </div>
+                                <div class="mb-2 mt-2">
+                                    <label for="address2"><i 
+                                    class="fa fa-map-marker"></i> Address 2</label>
+                                    <input type="text" name="address2" id="address2"
+                                    class="form-control">
+                                </div>
+                                <div class="mb-2 mt-2">
+                                    <label for="city"><i 
+                                    class="fa fa-city"></i> City</label>
+                                    <input type="text" name="city" id="city"
+                                    class="form-control" required>
+                                </div>
+                                <div class="mb-2 mt-2">
+                                    <label for="zipcode"><i 
+                                    class="fa fa-envelope"></i> Zip Code</label>
+                                    <input type="text" name="zipcode" id="zipcode"
+                                    class="form-control" pattern="\d{5}(-\d{4})?" required>
+                                </div>
                                 <div class="mb-2 mt-3">
                                     <button type="submit" 
                                     class="btn btn-success
                                     bg-success" style="font-weight: 600;">Create
                                         Account</button>
                                 </div>
-                                <div class="mb-2 mt-4">
-                                    <p class="text-center" style="font-weight: 600; 
-                                    color: navy;">I have an Account <a href="./index.php"
-                                            style="text-decoration: none;">Login</a></p>
-                                </div>
+
                             </form>
                         </div>
                     </div>
