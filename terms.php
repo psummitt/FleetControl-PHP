@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+// Handle terms acceptance
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accept']) && $_POST['accept'] === 'yes') {
+    $_SESSION['terms_accepted'] = true;
+    header('Location: register.php');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en-US">
 
@@ -23,14 +34,14 @@
         function handleAcceptance() {
             const checkbox = document.getElementById('acceptCheckbox');
             if (checkbox.checked) {
-                window.location.href = 'public/index.php';
+                document.getElementById('acceptForm').submit();
             } else {
                 alert('Please accept the terms and conditions to continue.');
             }
         }
 
         function goBackToIndex() {
-            window.location.href = 'index.php';
+            window.location.href = 'register.php';
         }
     </script>
 </head>

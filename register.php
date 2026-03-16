@@ -1,9 +1,11 @@
 <?php
+session_start();
 require_once '_private/db_credentials.php';
 require_once '_private/initialize.php';
 
 $message = "";
 $toastClass = "";
+$termsAccepted = isset($_SESSION['terms_accepted']) && $_SESSION['terms_accepted'] === true;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Match form field names and avoid undefined index notices
@@ -184,9 +186,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     class="form-control" pattern="\d{5}(-\d{4})?" required>
                                 </div>
                                 <div class="mb-2 mt-3">
-                                    <button type="submit" 
+                                    <div class="alert alert-info" role="alert">
+                                        <p style="margin-bottom: 0;">Please review and accept our <a href="terms.php" target="_blank">Terms and Conditions</a> to create your account.</p>
+                                    </div>
+                                </div>
+                                <div class="mb-2 mt-3">
+                                    <button type="submit" id="submitBtn"
                                     class="btn btn-success
-                                    bg-success" style="font-weight: 600;">Create
+                                    bg-success" style="font-weight: 600;" <?php echo !$termsAccepted ? 'disabled' : ''; ?>>Create
                                         Account</button>
                                 </div>
 
@@ -203,6 +210,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             return new bootstrap.Toast(toastEl, { delay: 3000 });
         });
         toastList.forEach(toast => toast.show());
+
+        // Check if terms were accepted and enable/disable button accordingly
+        function checkTermsAcceptance() {
+            const termsAccepted = <?php echo $termsAccepted ? 'true' : 'false'; ?>;
+            const submitBtn = document.getElementById('submitBtn');
+            if (termsAccepted) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        // Check on page load
+        document.addEventListener('DOMContentLoaded', checkTermsAcceptance);
     </script>
 </body>
 
