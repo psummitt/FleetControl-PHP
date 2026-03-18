@@ -667,9 +667,9 @@
   function find_vehicle_by_id($id) {
     global $db;
 
-    // Determine the correct primary/key column for tblvehicle dynamically
+    // Determine the correct primary/key column for vehicles dynamically
     $columns = [];
-    $col_res = mysqli_query($db, "SHOW COLUMNS FROM tblvehicle");
+    $col_res = mysqli_query($db, "SHOW COLUMNS FROM vehicles");
     if ($col_res) {
       while ($col = mysqli_fetch_assoc($col_res)) {
         $columns[] = $col['Field'];
@@ -693,7 +693,7 @@
         $key = $columns[0];
       } else {
         // As a last resort, query without a WHERE (shouldn't normally happen)
-        $sql = "SELECT * FROM tblvehicle LIMIT 1";
+        $sql = "SELECT * FROM vehicles LIMIT 1";
         $result = mysqli_query($db, $sql);
         confirm_result_set($result);
         $vehicle = mysqli_fetch_assoc($result);
@@ -703,7 +703,7 @@
     }
 
     $escaped_id = db_escape($db, $id);
-    $sql = "SELECT * FROM tblvehicle WHERE `" . $key . "`='" . $escaped_id . "' LIMIT 1";
+    $sql = "SELECT * FROM vehicles WHERE `" . $key . "`='" . $escaped_id . "' LIMIT 1";
     $result = mysqli_query($db, $sql);
     confirm_result_set($result);
     $vehicle = mysqli_fetch_assoc($result);
@@ -715,8 +715,8 @@
   function find_all_vehicles() {
     global $db;
 
-    $key = table_primary_key('tblvehicle');
-    $sql = "SELECT * FROM tblvehicle ORDER BY `" . $key . "` ASC";
+    $key = table_primary_key('vehicles');
+    $sql = "SELECT * FROM vehicles ORDER BY `" . $key . "` ASC";
     $result = mysqli_query($db, $sql);
     confirm_result_set($result);
     return $result;
@@ -796,7 +796,7 @@
     $purchase_price = is_blank($vehicle['curPurchasePrice']) ? null : (float)$vehicle['curPurchasePrice'];
     $notes = is_blank($vehicle['txtNotes']) ? null : db_escape($db, $vehicle['txtNotes']);
 
-    $sql = "INSERT INTO tblvehicle ";
+    $sql = "INSERT INTO vehicles ";
     $sql .= "(vehicle_year, vehicle_make, vehicle_model, vehicle_identifier, license_state, license_number, color, odometer, key_ignition, key_door, purchase_date, purchase_price, notes) ";
     $sql .= "VALUES (";
     $sql .= "'" . $vehicle_year . "',";

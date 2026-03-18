@@ -69,43 +69,43 @@ if (!$vehicle) {
                 <div class="card text-bg-dark p-3">
                     <div class="card-body">
                         <h5 class="card-title">Vehicle Details</h5>
-                        <dl class="row">
-                            <dt class="col-sm-4">Year:</dt>
-                            <dd class="col-sm-8"><?php echo h($vehicle['vehicle_year']); ?></dd>
-
-                            <dt class="col-sm-4">Make:</dt>
-                            <dd class="col-sm-8"><?php echo h($vehicle['vehicle_make']); ?></dd>
-
-                            <dt class="col-sm-4">Model:</dt>
-                            <dd class="col-sm-8"><?php echo h($vehicle['vehicle_model']); ?></dd>
-
-                            <dt class="col-sm-4">Identifier:</dt>
-                            <dd class="col-sm-8"><?php echo h($vehicle['vehicle_identifier']); ?></dd>
-
-                            <dt class="col-sm-4">License State:</dt>
-                            <dd class="col-sm-8"><?php echo h($vehicle['license_state']); ?></dd>
-
-                            <dt class="col-sm-4">License Number:</dt>
-                            <dd class="col-sm-8"><?php echo h($vehicle['license_number']); ?></dd>
-
-                            <dt class="col-sm-4">Color:</dt>
-                            <dd class="col-sm-8"><?php echo h($vehicle['color']); ?></dd>
-
-                            <dt class="col-sm-4">Odometer:</dt>
-                            <dd class="col-sm-8"><?php echo h($vehicle['odometer']); ?></dd>
-
-                            <dt class="col-sm-4">Purchase Date:</dt>
-                            <dd class="col-sm-8"><?php echo h($vehicle['purchase_date']); ?></dd>
-
-                            <dt class="col-sm-4">Purchase Price:</dt>
-                            <dd class="col-sm-8"><?php echo h($vehicle['purchase_price']); ?></dd>
-
-                            <dt class="col-sm-4">Notes:</dt>
-                            <dd class="col-sm-8"><?php echo h($vehicle['notes']); ?></dd>
-                        </dl>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Year</th>
+                                    <th scope="col">Make</th>
+                                    <th scope="col">Model</th>
+                                    <th scope="col">Identifier</th>
+                                    <th scope="col">License State</th>
+                                    <th scope="col">License Number</th>
+                                    <th scope="col">Color</th>
+                                    <th scope="col">Odometer</th>
+                                    <th scope="col">Purchase Date</th>
+                                    <th scope="col">Purchase Price</th>
+                                    <th scope="col">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><?php echo h($vehicle['id'] ?? $vehicle['vehicle_id'] ?? $vehicle['vehicleID'] ?? $vehicle['vehicleId'] ?? 'N/A'); ?></td>
+                                    <td><?php echo h($vehicle['vehicle_year'] ?? 'N/A'); ?></td>
+                                    <td><?php echo h($vehicle['vehicle_make'] ?? 'N/A'); ?></td>
+                                    <td><?php echo h($vehicle['vehicle_model'] ?? 'N/A'); ?></td>
+                                    <td><?php echo h($vehicle['vehicle_identifier'] ?? 'N/A'); ?></td>
+                                    <td><?php echo h($vehicle['license_state'] ?? 'N/A'); ?></td>
+                                    <td><?php echo h($vehicle['license_number'] ?? 'N/A'); ?></td>
+                                    <td><?php echo h($vehicle['color'] ?? 'N/A'); ?></td>
+                                    <td><?php echo h($vehicle['odometer'] ?? 'N/A'); ?></td>
+                                    <td><?php echo h($vehicle['purchase_date'] ?? 'N/A'); ?></td>
+                                    <td><?php echo h($vehicle['purchase_price'] ?? 'N/A'); ?></td>
+                                    <td><?php echo h($vehicle['notes'] ?? 'N/A'); ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
                         <div class="mt-3">
                             <a href="<?php echo url_for('/vehicles/vehicle.php'); ?>" class="btn btn-secondary">&laquo; Back to Vehicles</a>
-                            <a href="<?php echo url_for('/vehicles/editVehicle.php?id=' . h(u($vehicle['id']))); ?>" class="btn btn-primary">Edit Vehicle</a>
+                            <a href="<?php echo url_for('/vehicles/editVehicle.php?id=' . h(u($vehicle['id'] ?? ''))); ?>" class="btn btn-primary">Edit Vehicle</a>
                         </div>
                     </div>
                 </div>
@@ -119,7 +119,7 @@ if (!$vehicle) {
         <div>
         <!-- Social media and contact links. Add or remove any networks. -->
             <ul class="list-group list-group-flush">
-                <li class="list-group list-group-flush"><a href="mailto:paulmsummitt@gmail.com"><img src="../img/509-5096820_mail-png-circle-svg-icon-free-download-email-1369349225.png style="color: white" title="email"  width="20px" height="20px"> paulmsummitt@gmail.com</a></li>
+                <li class="list-group list-group-flush"><a href="mailto:paulmsummitt@gmail.com"><img src="../img/509-5096820_mail-png-circle-svg-icon-free-download-email-1369349225.png" style="color: white" title="email"  width="20px" height="20px"> paulmsummitt@gmail.com</a></li>
                 <li class="list-group list-group-flush"><a href="https://www.linkedin.com/in/paul-m-summitt/" target="_blank" rel="noopener">
                         <img src="../img/OIP-2203254293.jpg" style="color: white" title="LinkedIn"  width="20px" height="20px"> LinkedIn</a></li>
             </ul>
