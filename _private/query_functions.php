@@ -664,8 +664,35 @@
     }
   }
 
+  function ensure_vehicles_table_exists() {
+    global $db;
+    $sql = "CREATE TABLE IF NOT EXISTS vehicles (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      vehicle_year VARCHAR(10) DEFAULT NULL,
+      vehicle_make VARCHAR(255) DEFAULT NULL,
+      vehicle_model VARCHAR(255) DEFAULT NULL,
+      vehicle_identifier VARCHAR(255) DEFAULT NULL,
+      license_state VARCHAR(50) DEFAULT NULL,
+      license_number VARCHAR(50) DEFAULT NULL,
+      color VARCHAR(50) DEFAULT NULL,
+      odometer INT DEFAULT NULL,
+      key_ignition VARCHAR(100) DEFAULT NULL,
+      key_door VARCHAR(100) DEFAULT NULL,
+      purchase_date DATE DEFAULT NULL,
+      purchase_price DECIMAL(10,2) DEFAULT NULL,
+      notes TEXT DEFAULT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+    try {
+      @mysqli_query($db, $sql);
+    } catch (Throwable $e) {
+      // ignore if exists or error
+    }
+  }
+
   function find_vehicle_by_id($id) {
     global $db;
+
+    ensure_vehicles_table_exists();
 
     // Determine the correct primary/key column for vehicles dynamically
     $columns = [];
@@ -715,6 +742,8 @@
   function find_all_vehicles() {
     global $db;
 
+    ensure_vehicles_table_exists();
+
     $key = table_primary_key('vehicles');
     $sql = "SELECT * FROM vehicles ORDER BY `" . $key . "` ASC";
     $result = mysqli_query($db, $sql);
@@ -726,45 +755,52 @@
     $errors = [];
 
     // Year
-    if(is_blank($vehicle['yrVehicleYear'])) {
+    $yr = $vehicle['yrVehicleYear'] ?? $vehicle['vehicle_year'] ?? '';
+    if(is_blank($yr)) {
       $errors[] = "Year cannot be blank.";
     }
 
     // Make
-    if(is_blank($vehicle['txtVehicleMake'])) {
+    $make = $vehicle['txtVehicleMake'] ?? $vehicle['vehicle_make'] ?? '';
+    if(is_blank($make)) {
       $errors[] = "Make cannot be blank.";
-    } elseif(!has_length($vehicle['txtVehicleMake'], ['min' => 1, 'max' => 255])) {
+    } elseif(!has_length($make, ['min' => 1, 'max' => 255])) {
       $errors[] = "Make must be between 1 and 255 characters.";
     }
 
     // Model
-    if(is_blank($vehicle['txtVehicleModel'])) {
+    $model = $vehicle['txtVehicleModel'] ?? $vehicle['vehicle_model'] ?? '';
+    if(is_blank($model)) {
       $errors[] = "Model cannot be blank.";
-    } elseif(!has_length($vehicle['txtVehicleModel'], ['min' => 1, 'max' => 255])) {
+    } elseif(!has_length($model, ['min' => 1, 'max' => 255])) {
       $errors[] = "Model must be between 1 and 255 characters.";
     }
 
     // Identifier (VIN/Plate)
-    if(is_blank($vehicle['txtVehicleIdentifier'])) {
+    $ident = $vehicle['txtVehicleIdentifier'] ?? $vehicle['vehicle_identifier'] ?? '';
+    if(is_blank($ident)) {
       $errors[] = "Identifier cannot be blank.";
     }
 
     // Odometer (optional but if present must be numeric and >= 0)
-    if(!is_blank($vehicle['intOdometer']) && !is_numeric($vehicle['intOdometer'])) {
+    $odo = $vehicle['intOdometer'] ?? $vehicle['odometer'] ?? '';
+    if(!is_blank($odo) && !is_numeric($odo)) {
       $errors[] = "Odometer must be a number.";
-    } elseif(is_numeric($vehicle['intOdometer']) && $vehicle['intOdometer'] < 0) {
+    } elseif(is_numeric($odo) && $odo < 0) {
       $errors[] = "Odometer cannot be negative.";
     }
 
     // Purchase price (optional but numeric)
-    if(!is_blank($vehicle['curPurchasePrice']) && !is_numeric($vehicle['curPurchasePrice'])) {
+    $price = $vehicle['curPurchasePrice'] ?? $vehicle['purchase_price'] ?? '';
+    if(!is_blank($price) && !is_numeric($price)) {
       $errors[] = "Purchase price must be a number.";
     }
 
     // Purchase date (basic check: allow blank or YYYY-MM-DD)
-    if(!is_blank($vehicle['dPurchaseDate'])) {
+    $pdate = $vehicle['dPurchaseDate'] ?? $vehicle['purchase_date'] ?? '';
+    if(!is_blank($pdate)) {
       // basic regex for YYYY-MM-DD
-      if(!preg_match('/^\d{4}-\d{2}-\d{2}$/', $vehicle['dPurchaseDate'])) {
+      if(!preg_match('/^\d{4}-\d{2}-\d{2}$/', $pdate)) {
         $errors[] = "Purchase date must be in YYYY-MM-DD format.";
       }
     }
@@ -775,26 +811,41 @@
   function insert_vehicle($vehicle) {
     global $db;
 
+    ensure_vehicles_table_exists();
+
     $errors = validate_vehicle($vehicle);
     if(!empty($errors)) {
       return $errors;
     }
 
-    // Map incoming form keys to DB columns
-    // handle NULLs for optional fields and proper numeric formatting
-    $vehicle_year = db_escape($db, $vehicle['yrVehicleYear']);
-    $vehicle_make = db_escape($db, $vehicle['txtVehicleMake']);
-    $vehicle_model = db_escape($db, $vehicle['txtVehicleModel']);
-    $vehicle_identifier = db_escape($db, $vehicle['txtVehicleIdentifier']);
-    $license_state = is_blank($vehicle['intLicenseState']) ? null : db_escape($db, $vehicle['intLicenseState']);
-    $license_number = is_blank($vehicle['txtLicenseNumber']) ? null : db_escape($db, $vehicle['txtLicenseNumber']);
-    $color = is_blank($vehicle['txtColor']) ? null : db_escape($db, $vehicle['txtColor']);
-    $odometer = is_blank($vehicle['intOdometer']) ? null : (int)$vehicle['intOdometer'];
-    $key_ignition = is_blank($vehicle['txtKeyIgnition']) ? null : db_escape($db, $vehicle['txtKeyIgnition']);
-    $key_door = is_blank($vehicle['txtKeyDoor']) ? null : db_escape($db, $vehicle['txtKeyDoor']);
-    $purchase_date = is_blank($vehicle['dPurchaseDate']) ? null : db_escape($db, $vehicle['dPurchaseDate']);
-    $purchase_price = is_blank($vehicle['curPurchasePrice']) ? null : (float)$vehicle['curPurchasePrice'];
-    $notes = is_blank($vehicle['txtNotes']) ? null : db_escape($db, $vehicle['txtNotes']);
+    // Map incoming form or array keys to DB columns
+    $yr = $vehicle['yrVehicleYear'] ?? $vehicle['vehicle_year'] ?? '';
+    $make = $vehicle['txtVehicleMake'] ?? $vehicle['vehicle_make'] ?? '';
+    $model = $vehicle['txtVehicleModel'] ?? $vehicle['vehicle_model'] ?? '';
+    $ident = $vehicle['txtVehicleIdentifier'] ?? $vehicle['vehicle_identifier'] ?? '';
+    $state = $vehicle['txtLicenseState'] ?? $vehicle['intLicenseState'] ?? $vehicle['license_state'] ?? '';
+    $lic_num = $vehicle['txtLicenseNumber'] ?? $vehicle['license_number'] ?? '';
+    $col = $vehicle['txtColor'] ?? $vehicle['color'] ?? '';
+    $odo = $vehicle['intOdometer'] ?? $vehicle['odometer'] ?? '';
+    $ign = $vehicle['txtKeyIgnition'] ?? $vehicle['key_ignition'] ?? '';
+    $door = $vehicle['txtKeyDoor'] ?? $vehicle['key_door'] ?? '';
+    $pdate = $vehicle['dPurchaseDate'] ?? $vehicle['purchase_date'] ?? '';
+    $price = $vehicle['curPurchasePrice'] ?? $vehicle['purchase_price'] ?? '';
+    $nts = $vehicle['txtNotes'] ?? $vehicle['notes'] ?? '';
+
+    $vehicle_year = db_escape($db, $yr);
+    $vehicle_make = db_escape($db, $make);
+    $vehicle_model = db_escape($db, $model);
+    $vehicle_identifier = db_escape($db, $ident);
+    $license_state = is_blank($state) ? null : db_escape($db, $state);
+    $license_number = is_blank($lic_num) ? null : db_escape($db, $lic_num);
+    $color = is_blank($col) ? null : db_escape($db, $col);
+    $odometer = is_blank($odo) ? null : (int)$odo;
+    $key_ignition = is_blank($ign) ? null : db_escape($db, $ign);
+    $key_door = is_blank($door) ? null : db_escape($db, $door);
+    $purchase_date = is_blank($pdate) ? null : db_escape($db, $pdate);
+    $purchase_price = is_blank($price) ? null : (float)$price;
+    $notes = is_blank($nts) ? null : db_escape($db, $nts);
 
     $sql = "INSERT INTO vehicles ";
     $sql .= "(vehicle_year, vehicle_make, vehicle_model, vehicle_identifier, license_state, license_number, color, odometer, key_ignition, key_door, purchase_date, purchase_price, notes) ";
